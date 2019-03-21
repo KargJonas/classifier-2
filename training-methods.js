@@ -9,7 +9,6 @@ function trainSingle() {
     if (newError < error) {
       currentWeights = newWeights;
       error = newError;
-      drawPrediction();
       console.log({ error });
     }
   }
@@ -29,7 +28,6 @@ function trainMultiple() {
   if (newError < error) {
     currentWeights = newWeights;
     error = newError;
-    drawPrediction();
     console.log({ error });
   }
 }
@@ -49,7 +47,6 @@ function trainMultiErrorTolerant() {
 
   currentWeights = newWeights.map(weight => weight * errorFactor);
   error = newError;
-  drawPrediction();
   console.log({ error });
 }
 
@@ -67,9 +64,6 @@ function trainSingleErrorTolerant() {
     currentWeights[i] = newWeights[i] * errorFactor;
 
     error = newError;
-    drawPrediction();
     console.log({ error });
   }
 }
-
-// efficient
