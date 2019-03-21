@@ -8,8 +8,9 @@ const SCALE_X = 1;
 const SCALE_Y = 1;
 
 function f(x) {
-  return 0.5;
-  // return 0.5 * Math.pow(x, 2) + 0.1 * Math.pow(x, 3) + 0.1;
+  // return 0.5;
+  return 0.5 * Math.pow(x, 2) + 0.1 * Math.pow(x, 3) + 0.1;
+  // return Math.abs(Math.sin(x * 4));
 }
 
 generate({ PATH, AMOUNT, SCALE_X, SCALE_Y, f });

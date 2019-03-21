@@ -2,8 +2,8 @@
 
 // Settings
 const RANDOM_AMPLITUDE = 1;
-const LEARNING_RATE = 1;
-const COMPLEXITY = 80;
+const LEARNING_RATE = .25;
+const COMPLEXITY = 100;
 const DEFAULT_WEIGHT = 1;
 
 // Constants
@@ -77,10 +77,15 @@ while (error !== 0) {
 function f(x, y, weights) {
   let result = 0;
 
-  for (let i = 0; i < weights.length; i++) {
+  // for (let i = 0; i < weights.length; i++) {
+  //   result +=
+  //     (weights[i] * Math.pow(y, i)) -
+  //     (weights[i] * Math.pow(x, i));
+  // }
+  for (let i = 0; i < weights.length; i += 2) {
     result +=
-      (weights[i] * Math.pow(y, i)) -
-      (weights[i] * Math.pow(x, i));
+      (weights[i] * Math.pow(y, i)) +
+      (weights[i + 1] * Math.pow(x, i));
   }
 
   return result;
