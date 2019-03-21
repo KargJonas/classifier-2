@@ -1,63 +1,35 @@
 // Jonas Karg 2019
 
-// The dataset (has to be loaded first)
-let dataset;
+require("./training-methods");
+
+// Settings
+const LEARNING_RATE = 3;
+const COMPLEXITY = 10;
+const DEFAULT_WEIGHT = 1;
+
+// Constants
 const TWO_PI = Math.PI * 2;
+const sigmoid = (x) => (1 / (Math.pow(Math.E, x) + 1) - 0.5);
+
+// The dataset (has to be loaded first)
+let dataset = [];
 
 // Our weights
-let currentWeights = [0, 0, 0, 0, 0];
-let learningRate = 1;
+let currentWeights = new Array(COMPLEXITY).fill(DEFAULT_WEIGHT);
+
+// The initial error
 let error = 1;
+let iteration = 0;
 
 fetch("data/dataset-002.json")
   .then(response => response.json())
   .then(response => dataset = response)
-  .then(() => calculateError(currentWeights))
-  .then(draw)
-  .then(() => window.requestAnimationFrame(train));
+  .then(drawDataset)
+  .then(drawPrediction)
+  .then(train);
 
-function train() {
-  for (let i = 0; i < currentWeights.length; i++) {
-    const newWeights = currentWeights.slice();
-    const offset = Math.sin(Math.random() * TWO_PI) * learningRate;
-    newWeights[i] += offset
-    const newError = calculateError(currentWeights);
-
-    // Keep change, if it reduces error
-    if (newError < error) {
-      currentWeights = newWeights;
-      error = newError;
-      drawPrediction();
-      console.log({ error });
-    }
-  }
-
-  // const newWeights = currentWeights.slice();
-
-  // for (let i = 0; i < currentWeights.length; i++) {
-  //   const offset = Math.sin(Math.random() * TWO_PI) * learningRate;
-  //   newWeights[i] += offset;
-  // }
-
-  // const newError = calculateError(currentWeights);
-
-  // // Keep change, if it reduces error
-  // if (newError < error) {
-  //   currentWeights = newWeights;
-  //   error = newError;
-  //   drawPrediction();
-  //   console.log({ error });
-  // }
-
-  // console.log(newWeights);
-
-  // window.requestAnimationFrame(train);
-}
-
-function sigmoid(x) {
-  return 1 / (Math.pow(Math.E, x) + 1) - 0.5;
-}
-
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 function f(x, y, weights) {
   let result = 0;
 
@@ -70,8 +42,26 @@ function f(x, y, weights) {
   return result;
   // return sigmoid(result);
 }
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
-function calculateError(weights) {
+
+function train() {
+  // trainSingle();
+  // trainMultiple();
+  // trainMultiErrorTolerant();
+  trainSingleErrorTolerant();
+
+  if (error === 0) {
+    console.log("0% Error reached - stopping the training.");
+    return;
+  }
+
+  // console.log(++iteration);
+  window.requestAnimationFrame(train);
+}
+
+function evaluateError(weights) {
   const amount = dataset.length;
   let correct = 0;
 
@@ -79,32 +69,16 @@ function calculateError(weights) {
     const x = item.data[0];
     const y = item.data[1];
 
-    let prediction = 0;
+    let prediction = f(x, y, weights);
+    let predictedLabel = prediction > 0 ? 1 : 0;
 
-    // console.log(f(x, y, weights));
-
-    // Predict the label of the current point with our function
-    if (f(x, y, weights) >= 1) {
-      prediction = 1;
-    }
+    // console.log({x, y, prediction});
 
     // Validating the prediction
-    if (prediction === item.label) {
+    if (predictedLabel === item.label) {
       correct++;
     }
   });
 
   return 1 - correct / amount;
 }
-
-/*
--0.11115312349337014
-2.5488297760802663
-0.7279570232975133
-1.3492165776419505
-- 0.08995985198702716
-1.3072824752596606
-
-f(x,z) = x⁰*-0.11115312349337014+z⁰*-0.11115312349337014+x¹*2.5488297760802663+z¹*2.5488297760802663+x²*0.7279570232975133+z²*0.7279570232975133+x³*1.3492165776419505+z³*1.3492165776419505
-
-*/
