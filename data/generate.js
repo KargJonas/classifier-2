@@ -1,8 +1,8 @@
 const generate = require("./generators/generator-lib");
 
 // const PATH = "dataset-000.json";
-const PATH = "dataset-001.json";
-const AMOUNT = 1000;
+const PATH = "dataset-002.json";
+const AMOUNT = 2000;
 const SCALE_X = 1;
 const SCALE_Y = 1;
 
