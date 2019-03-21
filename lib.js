@@ -1,7 +1,5 @@
 // Jonas Karg 2019
 
-require("./training-methods");
-
 // Settings
 const LEARNING_RATE = 3;
 const COMPLEXITY = 10;
